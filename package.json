@@ -1,0 +1,28 @@
+{
+  "name": "spatial-viewer-core",
+  "version": "0.0.1",
+  "description": "Vanilla-JS rendering and interaction primitives for browser-based viewers of image-based spatial transcriptomics data.",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:update": "playwright test --update-snapshots"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stripathy/spatial-viewer-core.git"
+  },
+  "keywords": [
+    "spatial-transcriptomics",
+    "xenium",
+    "merfish",
+    "viewer",
+    "canvas",
+    "spatial-omics"
+  ],
+  "license": "MIT",
+  "author": "Shreejoy Tripathy",
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}
