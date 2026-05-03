@@ -8,17 +8,23 @@ downstream viewers pin via the synced `core/VERSION` file.
 
 ## [Unreleased]
 
-## [0.1.0] — 2026-05-XX (Tier 3a — pure utilities)
+## [0.1.0] — 2026-05-02 (Tier 3a — pure utilities)
 
 Initial extraction from `RSC_Xenium` and `SCZ_Xenium` viewers.
 
 ### Added
-- `src/00-namespace.js` — creates `window.SpatialViewerCore`
 - `src/10-utils.js` — `normalizeHex`, `safeIntCmp`
 - `src/20-boundary.js` — `decodeBoundaryJson`, `buildCellToBoundaryMap`
 - `src/50-scale-bar.js` — `drawScaleBar(ctx, opts)` (param-refactored)
-- Playwright test suite for the above
-- MIT license
+- Playwright tests for utils, boundary, and scale-bar (29 tests, all green)
+
+### Changed
+- `buildCellToBoundaryMap` is now pure: it takes `(bd, sample, opts?)` and
+  **returns** the map instead of mutating a global `cellToBoundaryIdx`.
+- `drawScaleBar` is now param-refactored: it takes
+  `(ctx, { viewScale, logicalWidth, logicalHeight, padding?, statusBarH?, targetPx? })`
+  instead of reading `viewScale`, `logicalWidth`, `logicalHeight` as bare globals.
+- `_normalizeHex` was renamed to `normalizeHex` (underscore prefix dropped).
 
 ## [0.0.1] — 2026-05-02 (Setup)
 
