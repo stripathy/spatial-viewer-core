@@ -8,6 +8,38 @@ downstream viewers pin via the synced `core/VERSION` file.
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-05-02 (Tier 4a — onboarding documentation + minimal example)
+
+No new code in `src/`. Documentation + a reference example to make
+"bring your own data" a real path.
+
+### Added
+- `docs/data-format.md` — formal JSON schemas for every file the viewer
+  reads (`index.json`, per-sample blobs, boundary files, transcript
+  files). Documents both palette conventions (RSC nested vs. SCZ flat),
+  required/optional fields, and the boundary-file integer-with-offset
+  encoding rationale.
+- `docs/adapter-contract.md` — every adapter method core may call,
+  signature, called-by-which-feature, return shape. Lifts what was
+  scattered across 5+ feature files into one canonical doc.
+- `examples/minimal/` — a 200-cell synthetic-dataset viewer (HTML, CSS,
+  viewer.js, data-adapter.js, data/index.json + data/demo.json + README).
+  Loads core directly from `../../src/` so it runs from a vanilla
+  `python3 -m http.server` without a sync step. The intended
+  starting-point when porting a new study.
+- `tests/12_minimal_example.spec.js` — 4 Playwright smoke tests that
+  load the example end-to-end and verify: no console errors, status
+  text reports cells, depth-mode switch hides ct-rows + shows banner,
+  solo button + 'x' shortcut both work, hover produces a tooltip.
+- README.md — new "Bringing your own data" section pointing at the
+  three new artifacts, and updated script-tag block listing all v0.3.0
+  files (was stale, listing only Tier 3a files).
+
+### Notes
+- 127 Playwright tests total now (123 from v0.3.0 + 4 new for the example).
+- Both production viewers continue to pin core@v0.3.0; v0.4.0 has no
+  runtime code changes that would require a re-sync.
+
 ## [0.3.0] — 2026-05-02 (Tier 3c — interaction features + tooltip framework)
 
 App framework + 5 features + declarative tooltip rendering. Each feature

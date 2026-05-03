@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>spatial-viewer-core — minimal example</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="main">
+    <aside id="sidebar">
+      <div class="title">spatial-viewer-core</div>
+      <div class="subtitle">Minimal example · 200 synthetic cells</div>
+
+      <section class="section">
+        <h3>Sample</h3>
+        <div id="sample-list"></div>
+      </section>
+
+      <section class="section">
+        <h3>Color by</h3>
+        <div id="color-modes">
+          <button class="mode-btn active" data-mode="subclass">Subclass</button>
+          <button class="mode-btn" data-mode="depth">Depth</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3>Cell types
+          <button id="solo-btn" title="Solo selected">solo</button>
+        </h3>
+        <input id="celltype-search" type="text" placeholder="Search…">
+        <div id="celltype-filter"></div>
+      </section>
+
+      <section class="section">
+        <h3>Display</h3>
+        <div class="row">
+          <label>Point size</label>
+          <input id="point-size" type="range" min="1" max="10" step="0.5" value="3">
+          <span id="size-val">3</span>
+        </div>
+        <div class="row">
+          <label>Opacity</label>
+          <input id="point-opacity" type="range" min="0.1" max="1" step="0.05" value="0.85">
+          <span id="opacity-val">0.85</span>
+        </div>
+        <div class="row">
+          <input type="checkbox" id="show-deselected-toggle" checked>
+          <label for="show-deselected-toggle">Show deselected (X)</label>
+        </div>
+      </section>
+    </aside>
+
+    <div id="canvas-wrap">
+      <canvas id="canvas"></canvas>
+      <div id="legend-overlay"></div>
+      <div id="status">
+        <span id="status-left"></span>
+        <span id="status-right"></span>
+      </div>
+    </div>
+
+    <div id="tooltip"></div>
+  </div>
+
+  <!-- Core scripts. In a real viewer you'd sync these into output/viewer/core/
+       and load them as core/*.js; here we point at the live src/ for clarity. -->
+  <script src="../../src/00-namespace.js" defer></script>
+  <script src="../../src/10-utils.js" defer></script>
+  <script src="../../src/20-boundary.js" defer></script>
+  <script src="../../src/30-render-primitives.js" defer></script>
+  <script src="../../src/40-hover.js" defer></script>
+  <script src="../../src/50-scale-bar.js" defer></script>
+  <script src="../../src/60-tooltip.js" defer></script>
+  <script src="../../src/60-features/show-deselected.js" defer></script>
+  <script src="../../src/60-features/search.js" defer></script>
+  <script src="../../src/60-features/solo.js" defer></script>
+  <script src="../../src/60-features/color-picker.js" defer></script>
+  <script src="../../src/70-app.js" defer></script>
+
+  <!-- Adapter (study-specific) and viewer wiring. -->
+  <script src="data-adapter.js" defer></script>
+  <script src="viewer.js" defer></script>
+</body>
+</html>

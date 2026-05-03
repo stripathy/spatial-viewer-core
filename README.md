@@ -44,16 +44,50 @@ src/
   00-namespace.js               # creates window.SpatialViewerCore
   10-utils.js                   # normalizeHex, safeIntCmp
   20-boundary.js                # decodeBoundaryJson, buildCellToBoundaryMap
-  30-render-primitives.js       # scatter/polygon/dim/transcript drawing  (Tier 3b)
-  40-hover.js                   # point-in-polygon hit-test               (Tier 3b)
+  30-render-primitives.js       # scatter/polygon/dim/transcript drawing
+  40-hover.js                   # point-in-polygon hit-test
   50-scale-bar.js               # drawScaleBar
-  60-features/                  # opt-in plugin features                  (Tier 3c)
-  70-app.js                     # mini App framework                      (Tier 3c)
+  60-tooltip.js                 # renderTooltip (declarative field-list)
+  60-features/
+    show-deselected.js          # dim-layer toggle + tooltip badge
+    search.js                   # cellTypeSearch + geneSearch
+    solo.js                     # solo-mode toggle
+    color-picker.js             # cell-type + gene color customization
+  70-app.js                     # mini App framework (state + events + batched render)
+
+docs/
+  data-format.md                # JSON file schemas
+  adapter-contract.md           # every adapter method, signature, called-by-which-feature
+
+examples/
+  minimal/                      # 200-cell synthetic dataset, ~250 lines of viewer.js
+                                # — clone this when porting a new study
 ```
 
-(Files marked Tier 3b/3c land in subsequent releases.)
+## Bringing your own data
 
-## Using it
+Three documents tell the full story:
+
+1. **[`docs/data-format.md`](docs/data-format.md)** — formal JSON schemas
+   for `index.json`, per-sample blobs, boundary files, and transcript
+   files. Tells you what to produce.
+2. **[`docs/adapter-contract.md`](docs/adapter-contract.md)** — every
+   adapter method core may call, with signatures and called-by-which-
+   feature notes. Tells you what JavaScript to write.
+3. **[`examples/minimal/`](examples/minimal/)** — a working 200-cell
+   viewer end-to-end: HTML + CSS + viewer.js + adapter + synthetic
+   data. Clone the directory, swap in your data, modify the adapter.
+
+The two production viewers ([RSC](https://github.com/stripathy/RSC_Xenium),
+[SCZ](https://github.com/stripathy/SCZ_Xenium)) are the worked-example
+endpoints when you need richer reference shapes (multi-clustering, QC
+fields, layer overlays, etc.).
+
+A reference Python pipeline (AnnData → these JSONs) is planned for a
+future release; for now, see the `code/pipeline/` directories in the
+two production viewers.
+
+## Using it (in a downstream viewer)
 
 In your viewer's `output/viewer/index.html`, before your `viewer.js`:
 
@@ -61,16 +95,29 @@ In your viewer's `output/viewer/index.html`, before your `viewer.js`:
 <script src="core/00-namespace.js" defer></script>
 <script src="core/10-utils.js" defer></script>
 <script src="core/20-boundary.js" defer></script>
+<script src="core/30-render-primitives.js" defer></script>
+<script src="core/40-hover.js" defer></script>
 <script src="core/50-scale-bar.js" defer></script>
-<!-- ...later as Tier 3b/3c files are added... -->
+<script src="core/60-tooltip.js" defer></script>
+<script src="core/60-features/show-deselected.js" defer></script>
+<script src="core/60-features/search.js" defer></script>
+<script src="core/60-features/solo.js" defer></script>
+<script src="core/60-features/color-picker.js" defer></script>
+<script src="core/70-app.js" defer></script>
+<script src="my-data-adapter.js" defer></script>
 <script src="viewer.js" defer></script>
 ```
 
 In your `viewer.js`:
 
 ```js
-const { normalizeHex, safeIntCmp } = SpatialViewerCore;
-// or call as SpatialViewerCore.normalizeHex(...) directly
+const { createApp, features, renderTooltip, ... } = SpatialViewerCore;
+const adapter = createMyAdapter({ /* refs */ });
+const app = createApp({ adapter, initialState: { /* ... */ } });
+app.use(features.showDeselected)
+   .use(features.cellTypeSearch)
+   .use(features.solo);
+// ... etc; see examples/minimal/viewer.js for the full pattern
 ```
 
 ## Sync workflow (for downstream viewers)

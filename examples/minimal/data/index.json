@@ -1,0 +1,14 @@
+{
+  "samples": [
+    {
+      "sample_id": "demo",
+      "n_cells": 200
+    }
+  ],
+  "subclass_colors": {
+    "ExN_L23": "#ff5e3a",
+    "ExN_L4": "#feb236",
+    "InN_Pvalb": "#52b3e8",
+    "Astrocyte": "#7d549a"
+  }
+}
