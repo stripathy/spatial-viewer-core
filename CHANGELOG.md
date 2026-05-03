@@ -8,6 +8,45 @@ downstream viewers pin via the synced `core/VERSION` file.
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-05-02 (Tier 3c — interaction features + tooltip framework)
+
+App framework + 5 features + declarative tooltip rendering. Each feature
+is a self-contained module that registers against an `App` object;
+viewers ship a small adapter (factory-built plain object) that handles
+study-specific data shape.
+
+### Added
+- `src/70-app.js` — `createApp({ adapter, initialState? })` returning a
+  plain object with `state`, `on/off/emit`, `setState/toggle` (microtask-
+  batched render emission), `use(feature)`, `start/destroy`.
+- `src/60-tooltip.js` — `renderTooltip({ title, badge?, sections, position? })`
+  walks a declarative field-list and produces HTML. Row types:
+  plain, swatch, color, hint, raw escape-hatch.
+- `src/60-features/show-deselected.js` — owns `state.showDeselectedCells`,
+  the 'x' shortcut, the `#show-deselected-toggle` checkbox, and the
+  tooltipReady-decorator that adds the "deselected" badge.
+- `src/60-features/search.js` — exports `cellTypeSearch` + `geneSearch`
+  via a `makeSearchFeature({ inputId, stateKey, adapterMethod })` factory.
+- `src/60-features/solo.js` — owns `state.{soloMode, soloType}`, wires
+  `#solo-btn`, exposes `app.enterSolo(type)` / `app.exitSolo()`.
+- `src/60-features/color-picker.js` — `app.setCellTypeColor` /
+  `app.setGeneColor` plus event-delegation wiring on `#celltype-filter`
+  and `#legend-overlay` for swatches with `data-color-celltype` /
+  `data-color-gene` / `data-color-mode`.
+- 69 new Playwright tests (123 total: 18 app + 17 tooltip + 9 show-
+  deselected + 9 search + 8 solo + 8 color-picker).
+
+### Adapter contract (downstream viewers must provide)
+The adapter is a plain object with these methods (used by features):
+- `isCellDeselected(idx)` — show-deselected
+- `onCellTypeSearchChange(value)`, `onGeneSearchChange(value)` — search
+- `onSoloChange(soloMode, soloType)`, `getCurrentActiveTypes()` — solo
+- `applyCellTypeColor(mode, name, color)`, `applyGeneColor(gene, color)` — color-picker
+
+Plus tooltip builders:
+- `getCellTooltip(idx, ctx)` → field-list
+- `getMoleculeTooltip(hit)` → field-list
+
 ## [0.2.0] — 2026-05-02 (Tier 3b — render + hover primitives)
 
 Five rendering primitives + two hit-test functions extracted from
