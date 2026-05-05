@@ -1,12 +1,17 @@
-# Node
-node_modules/
-playwright-report/
-test-results/
-playwright/.cache/
+# Python
+__pycache__/
+*.pyc
+*.pyo
 
-# OS / editors
+# Node / Playwright
+node_modules/
+test-results/
+playwright-report/
+
+# Editor / OS
 .DS_Store
 .idea/
 .vscode/
-*.swp
-*~
+
+# Test runtime artifacts (cleaned up by tests but still)
+tests/_converter_output/

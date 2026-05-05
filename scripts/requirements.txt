@@ -1,0 +1,11 @@
+# Converter dependencies. Pin loosely — the schema work happens in
+# pandas + h5py + numpy, all of which are very stable.
+numpy>=1.21
+pandas>=1.5
+pyarrow>=10.0
+h5py>=3.6
+anndata>=0.9
+
+# Optional: only needed for `anndata_to_viewer.py --sdata`.
+# Uncomment if you want SpatialData-backed boundary extraction.
+# spatialdata>=0.1

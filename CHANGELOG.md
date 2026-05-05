@@ -8,6 +8,53 @@ downstream viewers pin via the synced `core/VERSION` file.
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-03 (Tier 4b — Python converters)
+
+Two Python scripts that bridge real spatial transcriptomics data
+(10x Xenium output bundles, annotated AnnData files) to the JSON
+format defined in v0.4.0's `docs/data-format.md`. Bringing your own
+data is now a one-command path.
+
+### Added
+- `scripts/bundle_to_viewer.py` — converts a 10x Xenium output bundle
+  into viewer JSONs. Auto-exposes `graphclust` as a color mode; opt-in
+  for `kmeans_<k>` and per-gene transcript overlays. Reads
+  `cells.parquet` (or `.csv.gz`), boundaries, the 10x cluster CSVs.
+- `scripts/anndata_to_viewer.py` — converts an `.h5ad` (and optional
+  SpatialData zarr for boundaries) into viewer JSONs. Auto-detects
+  categorical obs columns as cluster axes, scanpy `<col>_colors` as
+  palettes, depth-like and count-like columns. CLI overrides for all.
+  Multi-sample AnnData supported via `--sample-col`.
+- `scripts/_platform_keys.py` — platform field-name + filter
+  constants, vendored from [segger](https://github.com/EliHei2/segger_dev)
+  (MIT). MERSCOPE constants present for future use; CLI currently
+  exposes Xenium only.
+- `scripts/_common.py` — shared writer code: palette generation,
+  int-encoded boundary JSON writer, transcript bundler, sample/index
+  JSON writers.
+- `scripts/test_data/synthetic_xenium/` — 200-cell synthetic Xenium
+  bundle (cells.parquet, cell_boundaries.parquet, nucleus_boundaries.parquet,
+  graphclust CSV) used by the e2e test. Regenerable from
+  `make_synthetic_xenium.py`.
+- `scripts/README.md` — install + quickstart for both converters.
+- `tests/13_converter_e2e.spec.js` — 4 Playwright tests that spawn the
+  Python converter, fetch its outputs in the browser, and verify that
+  index.json/sample.json/boundaries.json all parse and render through
+  core's primitives. Skips gracefully if Python deps aren't installed.
+
+### What's NOT in this release
+- MERSCOPE/Vizgen CLI mode (constants are vendored; the wiring isn't
+  exposed).
+- Reading a SpatialData zarr as primary input (cell table still has
+  to live in an `.h5ad`; `.zarr` only used to pull boundaries).
+- Visium / Slide-seq (sequencing-based platforms — different rendering
+  primitives needed).
+
+### Notes
+- 131 Playwright tests total now (127 from v0.4.0 + 4 e2e).
+- Both production viewers continue to pin core@v0.3.0; v0.5.0 has no
+  runtime code changes that would require a re-sync.
+
 ## [0.4.0] — 2026-05-02 (Tier 4a — onboarding documentation + minimal example)
 
 No new code in `src/`. Documentation + a reference example to make
